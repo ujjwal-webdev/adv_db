@@ -29,4 +29,22 @@ const getLiveFlightsFromRedis = async (req, res) => {
   }
 };
 
-module.exports = { getLiveFlights, getLiveFlightsFromRedis };
+const getFlightById = async (req, res) => {
+  const { icao24 } = req.params;  
+
+  try {
+    const data = await redisClient.get(`flight:${icao24}`);
+    if (!data) {
+      return res.status(404).json({ error: 'Flight not found' });
+    }
+    res.json(JSON.parse(data));
+  } catch (err) {
+    console.error('Error fetching flight details:', err);
+    res.status(500).json({ error: 'Failed to fetch flight details' });
+  }
+};
+
+
+module.exports = { getLiveFlights, getLiveFlightsFromRedis, getFlightById };
+
+
