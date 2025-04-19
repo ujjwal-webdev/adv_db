@@ -37,3 +37,6 @@ coverage/
 out/
 .temp/
 *.log
+
+# DB connection files (mongo, neo4j, redis)
+backend/src/db/*

@@ -3,37 +3,33 @@ import { fetchLiveFlights } from '../api/flights';
 
 const Dashboard = () => {
   const [flights, setFlights] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getFlights = async () => {
       try {
         const data = await fetchLiveFlights();
-        setFlights(data.states); // OpenSky API uses 'states' key
+        setFlights(data);
       } catch (error) {
         console.error('Failed to fetch flights:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
     getFlights();
+    const interval = setInterval(getFlights, 5000); 
+
+    return () => clearInterval(interval); 
   }, []);
 
   return (
     <div>
       <h1>Live Flights</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {flights.map((flight, index) => (
-            <li key={index}>
-              ICAO24: {flight[0]} | Callsign: {flight[1]} | Altitude: {flight[7]} | Velocity: {flight[9]}
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul>
+        {flights.map((flight, index) => (
+          <li key={index}>
+            ICAO24: {flight.icao24} | Callsign: {flight.callsign} | Altitude: {flight.altitude} | Speed: {flight.speed}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
