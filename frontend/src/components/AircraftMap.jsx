@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import api from '../services/api';
+import { Polyline } from 'react-leaflet';
+
 
 const AircraftMap = () => {
   const [flights, setFlights] = useState([]);
@@ -38,7 +40,18 @@ const AircraftMap = () => {
       flight.origin_country?.toLowerCase().includes(query)
     );
   });
-  
+
+  const [selectedTrail, setSelectedTrail] = useState([]);
+  const fetchFlightTrail = async (icao24) => {
+    try {
+      const res = await api.get(`/flights/${icao24}/trail`);
+      const trail = res.data.map(coord => [coord.latitude, coord.longitude]);
+      setSelectedTrail(trail);
+    } catch (err) {
+      console.error('Error fetching trail:', err.message);
+      setSelectedTrail([]);
+    }
+  };
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-white">
@@ -59,22 +72,30 @@ const AircraftMap = () => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         
-        {filteredFlights.map(flight => (
-            <Marker
+        {filteredFlights.map((flight) => (
+          <Marker
             key={flight.icao24}
             position={[flight.latitude, flight.longitude]}
             icon={planeIcon}
-            >
+            eventHandlers={{
+              click: () => fetchFlightTrail(flight.icao24)
+            }}
+          >
             <Popup>
-                <div>
+              <div>
+                <p><strong>Icao24:</strong> {flight.icao24 || 'N/A'}</p>
                 <p><strong>Callsign:</strong> {flight.callsign || 'N/A'}</p>
                 <p><strong>Country:</strong> {flight.origin_country}</p>
                 <p><strong>Altitude:</strong> {flight.altitude} m</p>
                 <p><strong>Velocity:</strong> {flight.velocity} m/s</p>
-                </div>
+              </div>
             </Popup>
-            </Marker>
+          </Marker>
         ))}
+
+        {selectedTrail.length > 1 && (
+          <Polyline positions={selectedTrail} color="blue" />
+        )}
         </MapContainer>
       </div>
     </div>
