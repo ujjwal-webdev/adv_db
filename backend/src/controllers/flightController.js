@@ -1,50 +1,52 @@
-const { getLiveFlightsFromOpenSky, updateFlightsInDatabase } = require('../services/openskyService');
-const redisClient = require('../db/redis');
-const { getFlightsFromRedis } = require('../services/redisFlightService');
+const redis = require('../services/redisClient');
+const axios = require('axios');
 
 const getLiveFlights = async (req, res) => {
   try {
-    await updateFlightsInDatabase();  
-    const flights = await getFlightsFromRedis(); 
-    res.json(flights); 
-  } catch (err) {
-    console.error('Error in getLiveFlights:', err);
-    res.status(500).json({ error: 'Failed to fetch flight data from Redis' });
-  }
-};
+    const keys = await redis.keys('flight:*');
+    const flights = [];
 
-const getLiveFlightsFromRedis = async (req, res) => {
-  try {
-    const keys = await redisClient.keys('flight:*'); 
-
-    if (keys.length === 0) {
-      return res.json([]); 
+    for (const key of keys) {
+      const data = await redis.get(key);
+      if (data) flights.push(JSON.parse(data));
     }
-    const values = await redisClient.mGet(keys); 
-    const flights = values.map((v) => JSON.parse(v));
-    res.json(flights);
+
+    const limitedFlights = flights.slice(0, 200);
+    res.json(limitedFlights);
   } catch (err) {
-    console.error('Error reading Redis:', err);
-    res.status(500).json({ error: 'Error fetching live flight data' });
+    res.status(500).json({ error: 'Failed to fetch flights from Redis' });
   }
 };
 
-const getFlightById = async (req, res) => {
-  const { icao24 } = req.params;  
+const getFlightTrail = async (req, res) => {
+  const { icao24 } = req.params;
 
   try {
-    const data = await redisClient.get(`flight:${icao24}`);
-    if (!data) {
-      return res.status(404).json({ error: 'Flight not found' });
+    const response = await axios.get('https://opensky-network.org/api/tracks/all', {
+      params: { icao24 },
+      auth: {
+        username: process.env.OS_USER,
+        password: process.env.OS_PASS
+      }
+    });
+
+    const path = response.data?.path;
+
+    if (!Array.isArray(path)) {
+      return res.status(404).json({ error: 'Flight trail not available' });
     }
-    res.json(JSON.parse(data));
-  } catch (err) {
-    console.error('Error fetching flight details:', err);
-    res.status(500).json({ error: 'Failed to fetch flight details' });
+
+    // Extract lat/lon from the path
+    const trail = path.map(entry => {
+      const [, lat, lon] = entry;
+      return { latitude: lat, longitude: lon };
+    });
+
+    res.json(trail);
+  } catch (error) {
+    console.error('Error fetching flight trail:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve flight trail' });
   }
 };
 
-
-module.exports = { getLiveFlights, getLiveFlightsFromRedis, getFlightById };
-
-
+module.exports = { getLiveFlights, getFlightTrail };
