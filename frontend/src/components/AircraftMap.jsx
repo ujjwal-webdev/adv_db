@@ -54,19 +54,19 @@ const AircraftMap = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center bg-white">
+    <div className="relative w-full h-full">
         <input
             type="text"
             placeholder="Search callsign / ICAO24 / country"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="absolute z-[1000] top-4 left-4 p-2 rounded shadow bg-white border"
+            className="absolute z-[1000] top-20 left-4 p-2 rounded shadow bg-white border"
         />
-      <div className="w-[80vw] h-[80vh] rounded-lg shadow overflow-hidden border">
+
         <MapContainer
         center={[20, 0]}
         zoom={2}
-        className="h-full w-full"
+        className="w-full h-full"
         >
         <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -97,7 +97,6 @@ const AircraftMap = () => {
           <Polyline positions={selectedTrail} color="blue" />
         )}
         </MapContainer>
-      </div>
     </div>
   );
 };
