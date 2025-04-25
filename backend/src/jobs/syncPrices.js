@@ -22,7 +22,7 @@ const syncPrices = async (origin, destination) => {
       departure_date: depart_date,
       return_date: return_date || null,
       price: value,
-      currency,
+      currency: "USD",
       transfers: number_of_changes,
       updated_at: new Date(found_at),
     });    

@@ -7,7 +7,7 @@ const travelAPI = axios.create({
   }
 });
 
-const fetchMonthlyPrices = async (origin, destination, month = '2025-06', currency = 'USD', trip_duration = 7) => {
+const fetchMonthlyPrices = async (origin, destination, month = '2025-05-01', currency = 'USD') => {
     try {
       const res = await travelAPI.get('/prices/month-matrix', {
         params: {
@@ -15,11 +15,11 @@ const fetchMonthlyPrices = async (origin, destination, month = '2025-06', curren
           destination,
           month,
           currency,
-          trip_duration,
           one_way: true
         }
       });
-  
+      
+      console.log('Travelpayouts response:', res.data);
       return res.data?.data || [];
     } catch (err) {
       console.error('Travelpayouts error:', err.message);
