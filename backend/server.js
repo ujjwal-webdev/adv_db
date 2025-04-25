@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const cron = require('node-cron');
+const syncPrices = require('./src/jobs/syncPrices');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,13 +27,26 @@ app.get('/', (req, res) => {
 const flightRoutes = require('./src/routes/flights');
 app.use('/api/flights', flightRoutes);
 
-// (Optional) Run background jobs here
 const syncOpenSky = require('./src/jobs/syncOpenSky');
 const syncMongo = require('./src/jobs/syncMongo');
 cron.schedule('*/15 * * * * *', syncOpenSky);     // Every 15 seconds
 cron.schedule('*/10 * * * *', syncMongo);
 
-// 404 Handler
+//Sync prices for multiple routes
+const routes = [
+  ['FRA', 'DEL'],
+  ['DEL', 'LHR'],
+  ['BOM', 'DXB']
+];
+cron.schedule('0 */6 * * *', () => {
+  console.log('Syncing flight prices...');
+  routes.forEach(([from, to]) => syncPrices(from, to));
+});
+
+const priceRoutes = require('./src/routes/prices');
+app.use('/api/prices', priceRoutes);
+
+
 app.use((req, res) => res.status(404).send('Not Found'));
 
 app.listen(PORT, () => {
