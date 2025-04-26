@@ -3,5 +3,6 @@ const router = express.Router();
 const { getPrices } = require('../controllers/priceController');
 
 router.get('/', getPrices);
+router.get('/calendar', getMonthlyCalendarData);
 
 module.exports = router;

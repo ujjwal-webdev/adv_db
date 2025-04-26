@@ -1,5 +1,6 @@
 import AircraftMap from './components/AircraftMap';
 import FlightPrices from './components/FlightPrices';
+import CalendarPrices from './components/CalendarPrices';
 
 function App() {
   return (
@@ -10,6 +11,10 @@ function App() {
 
       <div className="w-full px-4 pb-10 pt-6">
         <FlightPrices />
+      </div>
+
+      <div className="w-full px-4 pb-10 pt-6">
+        <CalendarPrices />
       </div>
     </div>
   );
