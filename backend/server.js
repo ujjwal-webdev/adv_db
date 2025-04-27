@@ -36,8 +36,27 @@ const syncMongo = require('./src/jobs/syncMongo');
 const routes = [
   ['FRA', 'DEL'],
   ['DEL', 'LHR'],
-  ['BOM', 'DXB']
+  ['BOM', 'DXB'],
+  ['JFK', 'LHR'],
+  ['LHR', 'JFK'],
+  ['JFK', 'CDG'],
+  ['CDG', 'JFK'],
+  ['LHR', 'DXB'],
+  ['DXB', 'LHR'],
+  ['SIN', 'SYD'],
+  ['SYD', 'SIN'],
+  ['LAX', 'HND'],
+  ['HND', 'LAX'],
+  ['FRA', 'JFK'],
+  ['JFK', 'FRA'],
+  ['DXB', 'SIN'],
+  ['SIN', 'DXB'],
+  ['DEL', 'CDG'],
+  ['CDG', 'DEL'],
+  ['LAX', 'SYD'],
+  ['SYD', 'LAX']
 ];
+
 cron.schedule('0 */6 * * *', () => {
   console.log('Syncing flight prices...');
   routes.forEach(([from, to]) => syncPrices(from, to));
@@ -45,6 +64,16 @@ cron.schedule('0 */6 * * *', () => {
 
 const priceRoutes = require('./src/routes/prices');
 app.use('/api/prices', priceRoutes);
+
+const syncNeo4jRoutes = require('./src/jobs/syncNeo4jRoutes');
+
+cron.schedule('0 */12 * * *', async () => {
+  console.log('Syncing busiest routes to Neo4j...');
+  await syncNeo4jRoutes();
+});
+
+const routeRoutes = require('./src/routes/flights');
+app.use('/api/routes', routeRoutes);
 
 
 app.use((req, res) => res.status(404).send('Not Found'));
