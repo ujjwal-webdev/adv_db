@@ -30,7 +30,7 @@ app.use('/api/flights', flightRoutes);
 const syncOpenSky = require('./src/jobs/syncOpenSky');
 const syncMongo = require('./src/jobs/syncMongo');
 // cron.schedule('*/15 * * * * *', syncOpenSky);     // Every 15 seconds
-// cron.schedule('*/10 * * * *', syncMongo);
+cron.schedule('*/10 * * * *', syncMongo);
 
 //Sync prices for multiple routes
 const routes = [

@@ -1,6 +1,8 @@
 import AircraftMap from './components/AircraftMap';
 import FlightPrices from './components/FlightPrices';
 import CalendarPrices from './components/CalendarPrices';
+import BusiestRoutes from './components/BusiestRoutes';
+import GraphRoutes from './components/GraphRoutes';
 
 function App() {
   return (
@@ -15,6 +17,14 @@ function App() {
 
       <div className="w-full px-4 pb-10 pt-6">
         <CalendarPrices />
+      </div>
+
+      <div className="w-full px-4 pb-10 pt-6">
+        <BusiestRoutes />
+      </div>
+
+      <div className="w-full px-4 pb-10 pt-6">
+        <GraphRoutes />
       </div>
     </div>
   );

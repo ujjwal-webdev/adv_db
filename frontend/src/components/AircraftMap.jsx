@@ -88,6 +88,8 @@ const AircraftMap = () => {
                 <p><strong>Country:</strong> {flight.origin_country}</p>
                 <p><strong>Altitude:</strong> {flight.altitude} m</p>
                 <p><strong>Velocity:</strong> {flight.velocity} m/s</p>
+                <p><strong>Latitude:</strong> {flight.latitude}</p>
+                <p><strong>Longitude:</strong> {flight.longitude}</p>
               </div>
             </Popup>
           </Marker>
