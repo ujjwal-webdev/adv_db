@@ -20,24 +20,32 @@ function BusiestRoutes() {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-6 text-center">🌍 Busiest Flight Routes</h1>
-      <table className="min-w-full bg-white rounded shadow-md">
-        <thead className="bg-gray-200 text-gray-600">
+      <table className="min-w-full bg-white shadow rounded-md overflow-hidden text-sm">
+        <thead className="bg-gray-200 text-gray-700">
           <tr>
-            <th className="py-3 px-6 text-left">Origin</th>
-            <th className="py-3 px-6 text-left">Destination</th>
-            <th className="py-3 px-6 text-left">Flights</th>
+            <th className="px-4 py-3 text-left">Origin</th>
+            <th className="px-4 py-3 text-left">Destination</th>
+            <th className="px-4 py-3 text-left">Flights</th>
+            <th className="px-4 py-3 text-left">Min Price</th>
+            <th className="px-4 py-3 text-left">Avg Stops</th>
+            <th className="px-4 py-3 text-left">Best Score</th>
+            <th className="px-4 py-3 text-left">Average Price</th>
           </tr>
         </thead>
         <tbody>
           {routes.map((route, index) => (
-            <tr key={index} className="border-b">
-              <td className="py-2 px-6">{route.origin}</td>
-              <td className="py-2 px-6">{route.destination}</td>
-              <td className="py-2 px-6">{route.count}</td>
+            <tr key={index} className="border-b hover:bg-gray-50">
+              <td className="px-4 py-2">{route.origin}</td>
+              <td className="px-4 py-2">{route.destination}</td>
+              <td className="px-4 py-2">{route.count}</td>
+              <td className="px-4 py-2">${route.minPrice}</td>
+              <td className="px-4 py-2">{route.avgStops}</td>
+              <td className="px-4 py-2">{route.bestScore}</td>
+              <td className="px-4 py-2">${route.avgPrice}</td>
             </tr>
           ))}
         </tbody>
-      </table>
+    </table>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import api from '../services/api';
 import ForceGraph2D from 'react-force-graph-2d';
+import api from '../services/api'; // Adjust path as needed
 
-const GraphRoutes = () => {
+function GraphRoutes() {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
 
   useEffect(() => {
@@ -17,15 +17,17 @@ const GraphRoutes = () => {
         flights.forEach(route => {
           nodesSet.add(route.origin);
           nodesSet.add(route.destination);
-
           links.push({
             source: route.origin,
             target: route.destination,
-            value: route.count
+            value: route.count,
+            minPrice: route.minPrice,
+            avgStops: route.avgStops,
+            bestScore: route.bestScore,
           });
         });
 
-        const nodes = Array.from(nodesSet).map(airport => ({ id: airport }));
+        const nodes = Array.from(nodesSet).map(code => ({ id: code }));
 
         setGraphData({ nodes, links });
       } catch (err) {
@@ -37,17 +39,44 @@ const GraphRoutes = () => {
   }, []);
 
   return (
-    <div className="h-screen">
+    <div className="h-[600px] overflow-hidden border rounded shadow bg-white">
       <ForceGraph2D
         graphData={graphData}
-        nodeLabel="id"
+        nodeId="id"
         nodeAutoColorBy="id"
         linkWidth={link => Math.log(link.value + 1)}
         linkDirectionalArrowLength={6}
         linkDirectionalArrowRelPos={1}
+        linkLabel={link =>
+          `Count: ${link.value}\nMin Price: $${link.minPrice}\nAvg Stops: ${link.avgStops}\nBest Score: ${link.bestScore}`
+        }
+        linkCurvature={link => {
+          const reverse = graphData.links.find(
+            other =>
+              other.source === link.target &&
+              other.target === link.source
+          );
+          return reverse ? 0.25 : 0;
+        }}
+        nodeCanvasObjectMode={() => 'before'}
+        nodeCanvasObject={(node, ctx, globalScale) => {
+          const label = node.id;
+          const fontSize = 12 / globalScale;
+
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
+          ctx.fillStyle = node.color;
+          ctx.fill();
+
+          ctx.font = `${fontSize}px Sans-Serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = '#000';
+          ctx.fillText(label, node.x, node.y - 10);
+        }}
       />
     </div>
   );
-};
+}
 
 export default GraphRoutes;
