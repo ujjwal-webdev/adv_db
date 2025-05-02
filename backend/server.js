@@ -57,17 +57,33 @@ const routes = [
   ['SYD', 'LAX']
 ];
 
-cron.schedule('0 */6 * * *', () => {
-  console.log('Syncing flight prices...');
-  routes.forEach(([from, to]) => syncPrices(from, to));
-});
+// cron.schedule('*/15 * * * * *', () => {
+//   console.log('Syncing flight prices...');
+//   routes.forEach(([from, to]) => syncPrices(from, to));
+// });
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// cron.schedule('*/2 * * * *', async () => {
+//   console.log('Sync flight prices started...');
+//   for (const [from, to] of routes) {
+//     try {
+//       await syncPrices(from, to);
+//       await delay(2000); // 2-second gap
+//     } catch (err) {
+//       console.error(`Error syncing ${from}-${to}:`, err.message);
+//     }
+//   }
+//   console.log('Sync flight prices finished.');
+// });
+
 
 const priceRoutes = require('./src/routes/prices');
 app.use('/api/prices', priceRoutes);
 
 const syncNeo4jRoutes = require('./src/jobs/syncNeo4jRoutes');
 
-cron.schedule('0 */12 * * *', async () => {
+cron.schedule('0 */6 * * *', async () => {
   console.log('Syncing busiest routes to Neo4j...');
   await syncNeo4jRoutes();
 });
