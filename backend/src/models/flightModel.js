@@ -9,6 +9,7 @@ const flightSchema = new mongoose.Schema({
   altitude: Number,
   velocity: Number,
   last_contact: Number,
+  true_track: Number,
   timestamp: Date
 }, { timestamps: true });
 

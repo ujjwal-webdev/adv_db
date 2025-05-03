@@ -61,6 +61,4 @@ const getMonthlyCalendarData = async (req, res) => {
   }
 };
 
-module.exports = {
-  getPrices,getMonthlyCalendarData
-};
+module.exports = { getPrices, getMonthlyCalendarData };

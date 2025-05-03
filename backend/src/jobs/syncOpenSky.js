@@ -14,7 +14,7 @@ async function fetchOpenSkyAndCache() {
     const flights = res.data.states;
 
     for (const flight of flights) {
-      const [icao24, callsign, origin_country, , last_contact, longitude, latitude, baro_altitude, , velocity] = flight;
+      const [icao24, callsign, origin_country, , last_contact, longitude, latitude, baro_altitude, , velocity, true_track] = flight;
 
       const data = {
         icao24,
@@ -25,7 +25,8 @@ async function fetchOpenSkyAndCache() {
         altitude: baro_altitude,
         velocity,
         last_contact,
-        timestamp: new Date()
+        timestamp: new Date(),
+        true_track
       };
 
       if (icao24 && latitude && longitude) {
