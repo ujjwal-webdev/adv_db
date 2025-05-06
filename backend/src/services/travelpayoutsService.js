@@ -19,7 +19,6 @@ const fetchMonthlyPrices = async (origin, destination, month = '2025-05-01', cur
         }
       });
       
-      console.log('Travelpayouts response:', res.data);
       return res.data?.data || [];
     } catch (err) {
       console.error('Travelpayouts error:', err.message);
