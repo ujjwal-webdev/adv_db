@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+.rotated-plane-icon div {
+  font-size: 22px;
+  transform-origin: center center;
+  transition: transform 0.3s ease-out;
+}
+

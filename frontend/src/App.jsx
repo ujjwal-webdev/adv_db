@@ -3,6 +3,7 @@ import FlightPrices from './components/FlightPrices';
 import CalendarPrices from './components/CalendarPrices';
 import BusiestRoutes from './components/BusiestRoutes';
 import GraphRoutes from './components/GraphRoutes';
+import WeatherAlertsTable from './components/WeatherAlertsTable';
 
 function App() {
   return (
@@ -26,6 +27,11 @@ function App() {
       <div className="w-full px-4 pb-10 pt-6">
         <GraphRoutes />
       </div>
+
+      <div className="w-full px-4 pb-10 pt-6">
+        <WeatherAlertsTable />
+      </div>
+
     </div>
   );
 }

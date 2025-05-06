@@ -49,4 +49,45 @@ const getFlightTrail = async (req, res) => {
   }
 };
 
-module.exports = { getLiveFlights, getFlightTrail };
+const getFlightWeatherAlert = async (req, res) => {
+  try {
+    const { icao24 } = req.params;
+    const key = `weatherAlert:${icao24}`;
+    const alert = await redis.get(key);
+
+    if (!alert) {
+      return res.json({ message: 'No weather alert for this flight, Clear Sky.' });
+    }
+
+    res.json(JSON.parse(alert));
+  } catch (err) {
+    console.error(`Error in getFlightWeatherAlert: ${err.message}`);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const getAllWeatherAlerts = async (req, res) => {
+  try {
+    const keys = await redis.keys('weatherAlert:*');
+    const alerts = [];
+
+    for (const key of keys) {
+      const data = await redis.get(key);
+      if (data) {
+        alerts.push({
+          icao24: key.split(':')[1],
+          ...JSON.parse(data)
+        });
+      }
+    }
+
+    res.json(alerts);
+  } catch (err) {
+    console.error(`Error in getAllWeatherAlerts: ${err.message}`);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
+module.exports = { getLiveFlights, getFlightTrail, getFlightWeatherAlert, getAllWeatherAlerts };
