@@ -29,7 +29,7 @@ app.use('/api/flights', flightRoutes);
 
 const syncOpenSky = require('./src/jobs/syncOpenSky');
 const syncMongo = require('./src/jobs/syncMongo');
-// cron.schedule('*/15 * * * * *', syncOpenSky);     // Every 15 seconds
+cron.schedule('*/15 * * * * *', syncOpenSky);     // Every 15 seconds
 // cron.schedule('*/10 * * * *', syncMongo);
 
 // User-Story 2: Syncing flight prices
@@ -103,6 +103,15 @@ app.use('/api/airspaces/restricted', restrictedAirspaceRoutes);
 
 // const syncRestrictedAirspaces = require('./src/jobs/syncRestrictedAirspaces');
 // syncRestrictedAirspaces(); // Trigger it once when server starts
+
+const syncNFZAlerts = require('./src/jobs/syncNFZAlerts');
+
+cron.schedule('*/10 * * * *', async () => {
+  await syncNFZAlerts();
+});
+
+const nfzAlertRoutes = require('./src/routes/nfzAlerts');
+app.use('/api/alerts/nfz', nfzAlertRoutes);
 
 
 

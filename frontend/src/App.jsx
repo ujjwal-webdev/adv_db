@@ -4,6 +4,7 @@ import CalendarPrices from './components/CalendarPrices';
 import BusiestRoutes from './components/BusiestRoutes';
 import GraphRoutes from './components/GraphRoutes';
 import WeatherAlertsTable from './components/WeatherAlertsTable';
+import NFZAlertTable from './components/NFZAlertTable';
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
 
       <div className="w-full px-4 pb-10 pt-6">
         <WeatherAlertsTable />
+      </div>
+
+      <div className="w-full px-4 pb-10 pt-6">
+        <NFZAlertTable />
       </div>
 
     </div>
