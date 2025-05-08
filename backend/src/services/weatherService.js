@@ -21,8 +21,13 @@ const descriptionIndicators = [
 
 async function getWeatherByCoords(lat, lon) {
   try {
-    const url = `https://open-weather13.p.rapidapi.com/city/latlon/${lat}/${lon}`;
+    const url = `https://open-weather13.p.rapidapi.com/latlon`;
     const response = await axios.get(url, {
+      params: {
+        latitude: lat,
+        longitude: lon,
+        lang: 'EN'
+      },
       headers: {
         'X-RapidAPI-Key': process.env.RAPIDAPI_KEY,
         'X-RapidAPI-Host': 'open-weather13.p.rapidapi.com'

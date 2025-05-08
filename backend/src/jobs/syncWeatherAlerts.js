@@ -37,12 +37,15 @@ function destinationPoint(lat, lon, bearing, distanceKm = 100) {
 
 async function syncWeatherAlerts() {
   try {
-    const rawFlights = await redisClient.lRange('flight:*', 0, 50);
-    const flights = rawFlights.map(JSON.parse);
+    const keys = await redisClient.keys('flight:*');
+    const limitedKeys = keys.slice(0, 50);
+    const rawFlights = await redisClient.mGet(limitedKeys);
+    const flights = rawFlights.filter(Boolean).map(JSON.parse);
 
     let alertCount = 0;
 
     for (const flight of flights) {
+      console.log(flight)
       if (
         !flight.latitude ||
         !flight.longitude ||
