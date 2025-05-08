@@ -30,7 +30,7 @@ app.use('/api/flights', flightRoutes);
 const syncOpenSky = require('./src/jobs/syncOpenSky');
 const syncMongo = require('./src/jobs/syncMongo');
 cron.schedule('*/15 * * * * *', syncOpenSky);     // Every 15 seconds
-// cron.schedule('*/10 * * * *', syncMongo);
+cron.schedule('*/10 * * * *', syncMongo);
 
 // User-Story 2: Syncing flight prices
 
@@ -73,7 +73,7 @@ async function syncFlightPrices() {
   }
   console.log('Sync flight prices finished.');
 }
-// syncFlightPrices();
+syncFlightPrices();
 
 const priceRoutes = require('./src/routes/prices');
 app.use('/api/prices', priceRoutes);
@@ -84,7 +84,7 @@ async function syncBusiestRoutes() {
   console.log('Syncing busiest routes to Neo4j...');
   await syncNeo4jRoutes();
 }
-// syncBusiestRoutes();
+syncBusiestRoutes();
 
 const routeRoutes = require('./src/routes/flights');
 app.use('/api/routes', routeRoutes);
@@ -92,10 +92,10 @@ app.use('/api/routes', routeRoutes);
 //User-Story 3: Syncing weather alerts
 const syncWeatherAlerts = require('./src/jobs/syncWeatherAlerts');
 
-// cron.schedule('*/10 * * * *', async () => {
-//   console.log('Syncing weather alerts...');
-//   await syncWeatherAlerts();
-// });
+cron.schedule('*/10 * * * *', async () => {
+  console.log('Syncing weather alerts...');
+  await syncWeatherAlerts();
+});
 
 //User-Story 4: Syncing restricted airspaces
 const restrictedAirspaceRoutes = require('./src/routes/restrictedAirspaceRoutes');
