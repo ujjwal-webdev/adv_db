@@ -35,7 +35,6 @@ function WeatherAlertsTable() {
               <th className="py-3 px-6 text-left">ICAO24</th>
               <th className="py-3 px-6 text-left">Condition</th>
               <th className="py-3 px-6 text-left">Description</th>
-              <th className="py-3 px-6 text-left">Time</th>
             </tr>
           </thead>
           <tbody>
@@ -44,7 +43,6 @@ function WeatherAlertsTable() {
                 <td className="py-2 px-6">{alert.icao24}</td>
                 <td className="py-2 px-6 text-red-600 font-semibold">{alert.condition}</td>
                 <td className="py-2 px-6">{alert.description}</td>
-                <td className="py-2 px-6">{new Date(alert.timestamp).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>
